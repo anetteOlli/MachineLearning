@@ -24,7 +24,7 @@ y_train = np.mat([ [0],    [1],    [1],    [0],     [1],      [1],      [0],    
 
 
 x_test = np.mat([ [0, 0], [0, 1], [1, 0], [1,1]  ])
-y_test = np.mat([ [1],    [1],    [1],    [0]    ])
+y_test = np.mat([ [0],    [1],    [1],    [0]    ])
 
 
 class SigmoidModel:
@@ -92,10 +92,8 @@ z_plot = np.linspace(0,1)
 
 X, Z = np.meshgrid(x_plot, z_plot)
 
-y_real = np.mat(  1/(1 +np.e**-(X * W1[0, 0] + Z * W1[1, 0]  + b1[0, 0]) )    ).transpose()
 
 matrix_hell = ([  (X*W1[0,0] + Z*W1[1,0]), (X*W1[0,1] + Z*W1[1,1] )  ])
-
 
 x_matrix_hell_1 = matrix_hell[0] + b1[0,0]
 x_matrix_hell_2 = matrix_hell[1] + b1[0,1]
@@ -106,13 +104,8 @@ f1_matrix_2 = 1/ (1 + np.e**-(x_matrix_hell_2))
 y_real = 1 / (1 + np.e**-( f1_matrix_1 * W2[0,0] +f1_matrix_2 * W2[1,0] + b2[0]    ))
 
 
-
-
-
-
-ax.plot_surface(X, Z, y_real, label ='prediction')
-
-#ax.scatter(X, Z, y_real)
+ax.plot_surface(X, Z, y_real)
+ax.scatter(x_test[:,0], x_test[:,1], y_test, c ='red')
 
 
 
