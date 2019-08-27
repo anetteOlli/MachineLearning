@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv('day_head_circumference.csv')
 
+print (data.describe())
 
 
 x = np.mat([[x] for x in data.iloc[:, 0].values])
@@ -44,7 +45,7 @@ class LinearRegressionModel:
 model = LinearRegressionModel()
 
 # Training: adjust the model so that its loss is minimized
-minimize_operation = tf.train.GradientDescentOptimizer(0.0001).minimize(model.loss)
+minimize_operation = tf.train.GradientDescentOptimizer(0.00000001).minimize(model.loss)
 
 # Create session object for running TensorFlow operations
 session = tf.Session()
@@ -52,8 +53,10 @@ session = tf.Session()
 # Initialize tf.Variable objects
 session.run(tf.global_variables_initializer())
 
-for epoch in range(100000):
+for epoch in range(2000):
     session.run(minimize_operation, {model.x: x_train, model.y: y_train})
+    if epoch % 10000 == 0 :
+        print (epoch)
 
 # Evaluate training accuracy
 W, b, loss = session.run([model.W, model.b, model.loss], {model.x: x_test, model.y: y_test})
@@ -61,15 +64,23 @@ print("W = %s, b = %s, loss = %s" % (W, b, loss))
 
 session.close()
 
-#x_ends = np.mat([[np.min(x)], [np.max(x)]])
-x_ends = np.arange(0.0, 1750.0, 50)
-S
-y_ends = np.mat( [[W[0,0]*x_ends[0,0] + b[0,0]], [W[0,0]*x_ends[1,0] + b[0,0]]])
+
+#Generate graph
+x_ends = np.arange(0.0, 1750.0, 0.5)
+
+y_ends = np.mat(  20 /(1 +np.e**-(x_ends * W[0, 0] + b[0, 0]) ) +31    ).transpose()
 
 
-#plt.plot(x_ends, y_ends, c='red')
+
+plt.plot(x_ends, y_ends, c='red')
 plt.plot(x, y, 'o', label='Input data', alpha=0.25)
 
 
 plt.legend()
 plt.show()
+
+"""
+Kjøring ga:
+    
+W = [[0.00253016]], b = [[-1.4156317e-05]], loss = 2.9476502
+"""
