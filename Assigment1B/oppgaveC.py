@@ -56,6 +56,17 @@ class SigmoidModel:
 model = SigmoidModel()
 
 
+"""
+        logits1 = tf.matmul(self.x, self.W1) + self.b1
+        self.h = tf.sigmoid(logits1)
+        
+        logits2 = tf.matmul(self.h, self.W2) + self.b2
+        self.f = tf.sigmoid(logits2)
+        
+        self.loss = tf.losses.sigmoid_cross_entropy(self.y, logits2)
+"""
+
+
 # Training: adjust the model so that its loss is minimized
 minimize_operation = tf.train.GradientDescentOptimizer(0.000001).minimize(model.loss)
 
