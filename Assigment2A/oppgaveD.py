@@ -1,11 +1,12 @@
 
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import numpy as np
 import tensorflow as tf
 import time
 
-(x_train_, y_train_), (x_test_, y_test_) = tf.keras.datasets.mnist.load_data()
+(x_train_, y_train_), (x_test_, y_test_) = tf.keras.datasets.fashion_mnist.load_data()
 x_train = np.reshape(x_train_, (-1, 28, 28, 1))  # tf.layers.conv2d takes 4D input
 y_train = np.zeros((y_train_.size, 10))
 y_train[np.arange(y_train_.size), y_train_] = 1
@@ -25,25 +26,32 @@ class ConvolutionalNeuralNetworkModel:
         self.x = tf.placeholder(tf.float32, shape=[None, 28, 28, 1])
         self.y = tf.placeholder(tf.float32)
 
+
+        #different layers:
         conv1 = tf.layers.conv2d(self.x, filters=32, kernel_size=[5, 5], strides=[1, 1], padding='same')
         pool1 = tf.layers.max_pooling2d(conv1, pool_size=[2, 2], strides=[2, 2], padding='same')
+        
+       
 
         conv2 = tf.layers.conv2d(pool1, filters=64, kernel_size=[5, 5], strides=[1, 1], padding='same')
         
-    
         
         pool2 = tf.layers.max_pooling2d(conv2, pool_size=[2, 2], strides=[2, 2], padding='same')
         
-
-        # Logits
-        dense1 = tf.layers.dense(tf.layers.flatten(pool2), units=1024)
         
+        
+        relu = tf.nn.relu(pool2)
+        dropout = tf.layers.dropout(relu, rate=0.4)
+                
+       
+
+
+        # Logits     
 
         
-        logits = tf.layers.dense(tf.layers.flatten(dense1), units=10)
+        logits = tf.layers.dense(tf.layers.flatten(dropout), units=10)
         
        
-       # logits = tf.layers.dense(tf.layers.flatten(pool2), units=1024)
 
         # Predictor
         f = tf.nn.softmax(logits)
@@ -67,7 +75,7 @@ start = time.time()
 # Initialize tf.Variable objects
 session.run(tf.global_variables_initializer())
 print("Starter med epoch: \n");
-for epoch in range(7):
+for epoch in range(20):
     for batch in range(batches):
         session.run(minimize_operation, {model.x: x_train_batches[batch], model.y: y_train_batches[batch]})
 
@@ -81,6 +89,6 @@ runtime = (time.time() - start)
 print("kjøretid var: ", runtime)
 
 """
-accuracy 0.8687
-kjøretid var:  369.49202513694763
+Accuracy: 87.74%
+Kjøretid var: 722
 """
